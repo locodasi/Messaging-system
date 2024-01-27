@@ -1,4 +1,4 @@
-const { gql } = require('apollo-server');
+const { gql } = require("apollo-server");
 
 const User = require("../../models/User");
 
@@ -12,12 +12,13 @@ const typeDefs = gql`
 
 const resolvers = {
     Contact: {
-        user: async (obj, args) => {
+        user: async (obj) => {
             const user = await User.findById(obj.userContact);
             return {
+                id: user._id,
                 number: user.number,
                 imageURL: user.imageURL
-            }
+            };
         },
     },
 };

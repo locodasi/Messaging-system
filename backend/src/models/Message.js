@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const schema = new mongoose.Schema({
     text: {
@@ -6,18 +6,22 @@ const schema = new mongoose.Schema({
         required: true,
         minlength: 1
     },
-    fecha: {
+    date: {
         type: Date,
         required: true,
     },
     to:{
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'User'
+        ref: "User"
     },
     from:{
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'User'
+        ref: "User"
     },
-})
+    read: {
+        type:Boolean,
+        required: true
+    }
+});
 
-module.exports = mongoose.model('Message', schema);
+module.exports = mongoose.model("Message", schema);

@@ -1,7 +1,8 @@
-const { gql } = require('apollo-server');
+const { gql } = require("apollo-server");
 //import * as yup from 'yup';
-const User = require('../../models/User');
-const Contact = require('../../models/Contact');
+const User = require("../../models/User");
+// eslint-disable-next-line no-unused-vars
+const Contact = require("../../models/Contact");
 
 const typeDefs = gql`
     extend type Query {
@@ -14,7 +15,7 @@ const typeDefs = gql`
 
 const resolvers = {
     Query: {
-        users: async (obj, args) => await User.find({}).populate("contacts"),
+        users: async () => await User.find({}).populate("contacts"),
     },
 };
 

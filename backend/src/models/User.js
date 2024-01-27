@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 let uniqueValidator = require("mongoose-unique-validator");
 
 const schema = new mongoose.Schema({
@@ -19,11 +19,11 @@ const schema = new mongoose.Schema({
     contacts: [
         {
             type: mongoose.Schema.Types.ObjectId,
-            ref: 'Contact'
+            ref: "Contact"
         }
     ],
-})
+});
 
-schema.plugin(uniqueValidator,{message:`Error, expected {PATH} to be unique`});
+schema.plugin(uniqueValidator,{ message:"Error, expected {PATH} to be unique" });
 
-module.exports = mongoose.model('User', schema);
+module.exports = mongoose.model("User", schema);
