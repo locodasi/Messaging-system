@@ -1,59 +1,58 @@
-import React, { useRef } from "react";
+import { Fragment } from 'react';
+import ListItemText from '@mui/material/ListItemText';
+import ListItemAvatar from '@mui/material/ListItemAvatar';
+import ListItem from '@mui/material/ListItem';
+import Avatar from '@mui/material/Avatar';
+import Typography from '@mui/material/Typography';
+import Button from '@mui/material/Button';
 
-import { useDispatchContact } from "../../../contexts/ContactProvider";
+import { useDispatchContact } from '../../../contexts/ContactProvider';
 
-const styles = {
-    container: {
-        backgroundColor: "#fff",
-        display: "flex",
-        flexDirection: "row",
-        margin: "5px",
-        marginBottom: "10px",
-        width: "100%",
+const classes = {
+    inline: {
+        display: 'inline',
+    },
+    button: {
         border: "none",
-    },
-    item: {
-        marginLeft: "8px",
-        borderBottom: "2px solid grey",
-        width: "100%"
-    },
-    image:{
-        width: 60,  // Ajusta según tus preferencias
-        height: 60,  // Ajusta según tus preferencias
-        borderRadius: 30,  // La mitad del ancho y alto para hacer un círculo
+        transition: 'background-color 0.3s',
+        '&:hover': {
+        backgroundColor: '#e0e0e0',  // Cambia el color a tu preferencia
+        },
     }
-};
+}
 
-const  Contact = ({contact})=> {
-    const buttonRef = useRef(null);
+const Contact = ({contact})=> {
 
     const dispatch = useDispatchContact();
-
-    const handleMouseOver = () => {
-        buttonRef.current.style.backgroundColor = "rgba(0, 0, 0, 0.1)";
-    };
-
-    const handleMouseOut = () => {
-        buttonRef.current.style.backgroundColor = "transparent";
-    };
 
     const onCLick = () => {
         dispatch({ type: "setContact", contact: contact });
     }
 
     return(
-        <button 
-            ref={buttonRef}
-            style={styles.container}
-            onClick={onCLick}
-            onMouseOver={handleMouseOver}
-            onMouseOut={handleMouseOut}
-        >
-            <img style={styles.image} src={contact.user.imageURL} alt={`contact ${contact.name}`}/>
-            <div style={styles.item}>
-                <h3>{contact.name}</h3>
-            </div>
-        </button>
+        <Button onClick={onCLick} sx={classes.button}>
+            <ListItem alignItems="flex-start">         
+                <ListItemAvatar>
+                <Avatar alt={`contact ${contact.name}`} src={contact.user.imageURL} />
+                </ListItemAvatar>
+                <ListItemText
+                    primary={<span style={{ color: 'black' }}>{contact.name}</span>}
+                    secondary={
+                        <Fragment>
+                        <Typography
+                            component="span"
+                            variant="body2"
+                            style={classes.inline}
+                            color="textPrimary"
+                        >
+                            Ali Connors
+                        </Typography>
+                        {" — I'll be in your neighborhood doing errands this…"}
+                        </Fragment>
+                    }
+                />           
+            </ListItem>
+        </Button>
     );
 }
 

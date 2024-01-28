@@ -1,11 +1,12 @@
-import { GET_CONTACTS } from '../graphql/queries';
+import { GET_MESSAGES } from '../graphql/queries';
 import { useQuery } from '@apollo/client';
 
-const useContacts = () => {
+const useMessages = (variables) => {
 
     //const {data, loading, fetchMore} = useQuery(GET_CONTACTS, {
-    const {data, loading, error} = useQuery(GET_CONTACTS, {
-        fetchPolicy: "cache-and-network"
+    const {data, loading, error} = useQuery(GET_MESSAGES, {
+        fetchPolicy: "cache-and-network",
+        variables
     })
 
 //   const handleFetchMore = () => {
@@ -38,10 +39,10 @@ const useContacts = () => {
 //     });
 //   };
 
-    let contacts = (loading || error) ? [] : data.getContacts
-    return {contacts, loading, error}
+    let messages = (loading || error) ? [] : data.getMessages
+    return {messages, loading, error}
     //    return {contacts, loading, fetchMore: handleFetchMore,}
 
 };
 
-export default useContacts;
+export default useMessages;

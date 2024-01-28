@@ -9,6 +9,9 @@ const Message = require("./types/Message");
 const userQuery = require("./queries/user");
 const contactQuery = require("./queries/contact");
 const messageQuery = require("./queries/message");
+const meQuery = require("./queries/me");
+
+const loginMutation = require("./mutations/login");
 
 const rootTypeDefs = gql`
     type Query {
@@ -29,6 +32,8 @@ const typeDefs = [
     contactQuery.typeDefs,
     messageQuery.typeDefs,
     Message.typeDefs,
+    meQuery.typeDefs,
+    loginMutation.typeDefs,
 ];
 
 const resolvers = merge(
@@ -38,6 +43,8 @@ const resolvers = merge(
     contactQuery.resolvers,
     messageQuery.resolvers,
     Message.resolvers,
+    meQuery.resolvers,
+    loginMutation.resolvers,
 );
 
 

@@ -10,8 +10,8 @@ const { createServer } = require("http");
 require("dotenv").config();
 const mongoose = require("mongoose");
 
-//const jwt = require('jsonwebtoken')
-//const User = require('./models/user')
+const jwt = require("jsonwebtoken");
+const User = require("./models/User");
 
 const { typeDefs, resolvers } = require("../src/GraphQL/schema");
 
@@ -52,16 +52,20 @@ const start = async() => {
                 }
             }
         ],
-        // context: async ({ req }) => {
-        //     const auth = req ? req.headers.authorization : null
-        //     if (auth && auth.startsWith('Bearer ')) {
-        //       const decodedToken = jwt.verify(
-        //         auth.substring(7), process.env.JWT_SECRET
-        //       )
-        //       const currentUser = await User.findById(decodedToken.id).populate('friends')
-        //       return { currentUser }
-        //     }
-        //   },
+        context: async ({ req }) => {
+            const auth = req ? req.headers.authorization : null;
+            if (auth && auth.startsWith("Bearer ")) {
+                try{
+                    const decodedToken = jwt.verify(
+                        auth.substring(7), process.env.JWT_SECRET
+                    );
+                    const currentUser = await User.findById(decodedToken.id).populate("contacts");
+                    return { currentUser };
+                }catch(error){
+                    return null;
+                }
+            }
+        },
     });
 
     await server.start();
