@@ -4,13 +4,14 @@ import { gql } from "@apollo/client";
 export const GET_CONTACTS = gql`
 query GetContacts {
     getContacts {
-        id
         name
         user {
             number
-            imageURL
             id
+            imageURL
         }
+        unreadMessageCount
+        id
     }
 }
 `;

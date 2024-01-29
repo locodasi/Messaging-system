@@ -18,6 +18,18 @@ const classes = {
         '&:hover': {
         backgroundColor: '#e0e0e0',  // Cambia el color a tu preferencia
         },
+    },
+    unreadCircle: {
+        backgroundColor: 'green',
+        borderRadius: '50%',
+        color: 'white',
+        padding: '4px 8px',
+        position: 'absolute',
+        top: 0,
+        right: 0,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
     }
 }
 
@@ -33,8 +45,13 @@ const Contact = ({contact})=> {
         <Button onClick={onCLick} sx={classes.button}>
             <ListItem alignItems="flex-start">         
                 <ListItemAvatar>
-                <Avatar alt={`contact ${contact.name}`} src={contact.user.imageURL} />
+                    <Avatar alt={`contact ${contact.name}`} src={contact.user.imageURL} />
                 </ListItemAvatar>
+                {contact.unreadMessageCount > 0 && (
+                    <div style={classes.unreadCircle}>
+                        {contact.unreadMessageCount >= 100 ? "+99" : contact.unreadMessageCount}
+                    </div>
+                )}
                 <ListItemText
                     primary={<span style={{ color: 'black' }}>{contact.name}</span>}
                     secondary={
