@@ -1,48 +1,31 @@
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
-import Link from '@mui/material/Link';
-import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
-import useLogin from '../../hooks/useLogin';
-import { useDispatchState } from '../../contexts/StateProvider';
-
-const Copyright = (props) => {
-    return (
-        <Typography variant="body2" color="text.secondary" align="center" {...props}>
-            {'Copyright © '}
-            <Link color="inherit" href="https://lucas-da-silva-portafolio.onrender.com/">
-                My Website
-            </Link>{' '}
-            {new Date().getFullYear()}
-            {'.'}
-        </Typography>
-    );
-}
-
-// TODO remove, this demo shouldn't need to reset the theme.
+import useCreateContact from '../../hooks/useCreateContact';
+import { useNavigate } from 'react-router-dom';
 
 const defaultTheme = createTheme();
 
-const  Acces = ({setToken})=> {
+const FormContact = ()=> {
+    const [createContact] = useCreateContact();
 
-    const [login] = useLogin();
-    const dispatch = useDispatchState();
+    const navigate = useNavigate();
 
     const handleSubmit = async (event) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
         try{
-            const dataLogin = await login({
+            await createContact({
                 number: data.get('number'),
-                password: data.get('password')
+                name: data.get('name')
             })
 
-            dispatch({ type: "setUser", user: dataLogin.authenticate });
+            navigate("/");
         }catch(error){
             console.log(error.graphQLErrors[0].message);
         }
@@ -61,7 +44,7 @@ const  Acces = ({setToken})=> {
                 }}
                 >
                     <Typography component="h1" variant="h5">
-                        Sign in
+                        Create Contact
                     </Typography>
                     <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
                         <TextField
@@ -78,11 +61,9 @@ const  Acces = ({setToken})=> {
                             margin="normal"
                             required
                             fullWidth
-                            name="password"
-                            label="Password"
-                            type="password"
-                            id="password"
-                            autoComplete="current-password"
+                            name="name"
+                            label="Name"
+                            id="name"
                         />
                         <Button
                             type="submit"
@@ -90,21 +71,13 @@ const  Acces = ({setToken})=> {
                             variant="contained"
                             sx={{ mt: 3, mb: 2 }}
                             >
-                            Sign In
+                            Create
                         </Button>
-                        <Grid container justifyContent="flex-end">
-                        <Grid item>
-                            <Link href="signup" variant="body2">
-                            {"Don't have an account? Sign Up"}
-                            </Link>
-                        </Grid>
-                        </Grid>
                     </Box>
                 </Box>
-                <Copyright sx={{ mt: 8, mb: 4 }} />
             </Container>
         </ThemeProvider>
     );
 }
 
-export default Acces
+export default FormContact;

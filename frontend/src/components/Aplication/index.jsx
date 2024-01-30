@@ -1,12 +1,12 @@
 import Contacts from "./Contacts";
 
-import { useStateContact } from "../../contexts/ContactProvider";
+import { useStateContextState } from "../../contexts/StateProvider";
 
 import Chat from "./Chat";
 
 const  Aplication = ()=> {
 
-    const state = useStateContact();
+    const state = useStateContextState();
 
     return(
         <div style={{display: "flex"}}>

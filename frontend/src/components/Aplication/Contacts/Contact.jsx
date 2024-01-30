@@ -6,7 +6,7 @@ import Avatar from '@mui/material/Avatar';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 
-import { useDispatchContact } from '../../../contexts/ContactProvider';
+import { useDispatchState } from '../../../contexts/StateProvider';
 
 const classes = {
     inline: {
@@ -35,7 +35,7 @@ const classes = {
 
 const Contact = ({contact})=> {
 
-    const dispatch = useDispatchContact();
+    const dispatch = useDispatchState();
 
     const onCLick = () => {
         dispatch({ type: "setContact", contact: contact });

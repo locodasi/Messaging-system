@@ -10,6 +10,8 @@ const typeDefs = gql`
 
     type Token {
         value: String!
+        number: String!
+        imageURL: String!
     }
 
     extend type Mutation {
@@ -48,7 +50,9 @@ const resolvers = {
             return {
                 value: jwt.sign(userForToken, process.env.JWT_SECRET, {
                     expiresIn: "3h", // Tiempo de expiración de 1 hora
-                })
+                }),
+                number: user.number,
+                imageURL: user.imageURL
             };
         },
     },

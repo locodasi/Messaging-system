@@ -8,8 +8,12 @@ import { setContext } from '@apollo/client/link/context'
 import { getMainDefinition } from '@apollo/client/utilities'
 import { WebSocketLink } from '@apollo/client/link/ws'
 
+import {BrowserRouter as Router} from "react-router-dom";
+
+import { StateProvider } from './contexts/StateProvider';
+
 const authLink = setContext((_, { headers }) => {
-  const token = localStorage.getItem('messasegin-user-token')
+  const token = localStorage.getItem('messasegin-user-token');
   return {
     headers: {
       ...headers,
@@ -52,7 +56,11 @@ const root = createRoot(container);
 root.render(
     <React.StrictMode>
       <ApolloProvider client={client}>
-        <App />
+      <StateProvider>
+          <Router>
+            <App />
+          </Router>
+        </StateProvider>
       </ApolloProvider>
   </React.StrictMode>
 )
