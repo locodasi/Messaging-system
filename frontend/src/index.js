@@ -56,7 +56,7 @@ const root = createRoot(container);
 root.render(
     <React.StrictMode>
       <ApolloProvider client={client}>
-      <StateProvider>
+        <StateProvider>
           <Router>
             <App />
           </Router>

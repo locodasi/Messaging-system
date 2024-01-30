@@ -33,7 +33,7 @@ function Copyright(props) {
 
 const defaultTheme = createTheme();
 
-const SignUp = ({setToken}) => {
+const SignUp = () => {
 
   const [login] = useLogin();
   const [createUser] = useCreateUSer();
@@ -59,6 +59,7 @@ const SignUp = ({setToken}) => {
         })
 
         dispatch({ type: "setUser", user: dataLogin.authenticate });
+        navigate("/");
     }catch(error){
         console.log(error.graphQLErrors[0].message);
     }

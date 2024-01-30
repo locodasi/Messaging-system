@@ -33,6 +33,7 @@ const resolvers = {
                 const userSave = await user.save();
                 return userSave;
             }catch(error){
+                console.log(error);
                 throw new GraphQLError("Creating the user failed", {
                     extensions: {
                         code: "BAD_USER_INPUT",

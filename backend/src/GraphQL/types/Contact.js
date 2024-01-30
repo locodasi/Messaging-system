@@ -12,8 +12,6 @@ const typeDefs = gql`
 const resolvers = {
     Contact: {
         user: async (obj) => {
-            const a = { ...obj.userContact, id:obj.userContact._id };
-            console.log("aaaa", a);
             return { ...obj.userContact, id:obj.userContact._id };
         },
     },

@@ -28,7 +28,7 @@ const Copyright = (props) => {
 
 const defaultTheme = createTheme();
 
-const  Acces = ({setToken})=> {
+const  Acces = ()=> {
 
     const [login] = useLogin();
     const dispatch = useDispatchState();
