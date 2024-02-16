@@ -32,3 +32,13 @@ query GetMessages($toId: String!) {
     }
 }
 `;
+
+export const ME = gql`
+query getMe {
+    me {
+        number
+        imageURL
+        id
+    }
+}
+`

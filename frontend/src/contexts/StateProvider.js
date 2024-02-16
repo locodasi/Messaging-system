@@ -11,14 +11,12 @@ const StateRedurcer = (state, action) => {
             }
         }
         case "setUser": {
-            localStorage.setItem('messasegin-user-token', action.user.value);
             return {
                 ...state,
                 user:action.user
             }
         }
         case "cleanUser": {
-            localStorage.removeItem('messasegin-user-token');
             return {
                 ...state,
                 user:null

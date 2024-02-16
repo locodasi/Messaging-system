@@ -11,6 +11,10 @@ import useMessages from "../../../hooks/useMessages";
 
 import Message from "./Message";
 
+import useCreateMessage from "../../../hooks/useCreateMessages";
+
+import { GET_MESSAGES } from "../../../graphql/queries";
+
 const classes = {
     chat: {
         height: "100vh",
@@ -32,6 +36,8 @@ const classes = {
 const Chat = ({contact}) => {
     const [input, setInput] = useState("");
 
+    const [createMessage] = useCreateMessage(contact.user.id);
+
     const {messages, loading, error} = useMessages({
         toId: contact.user.id
     });
@@ -43,9 +49,9 @@ const Chat = ({contact}) => {
         window.location.reload();
     }
 
-    const handleSend = () => {
+    const handleSend = async () => {
         if (input.trim() !== "") {
-            console.log(input);
+            await createMessage({text: input, toId: contact.user.id})
             setInput("");
         }
     };
@@ -75,6 +81,7 @@ const Chat = ({contact}) => {
                             placeholder="Type a message"
                             variant="outlined"
                             value={input}
+                            multiline
                             onChange={handleInputChange}
                         />
                     </Grid>

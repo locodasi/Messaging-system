@@ -12,6 +12,7 @@ const typeDefs = gql`
         value: String!
         number: String!
         imageURL: String!
+        id: String!
     }
 
     extend type Mutation {
@@ -52,7 +53,8 @@ const resolvers = {
                     expiresIn: "3h", // Tiempo de expiración de 1 hora
                 }),
                 number: user.number,
-                imageURL: user.imageURL
+                imageURL: user.imageURL,
+                id: user._id
             };
         },
     },

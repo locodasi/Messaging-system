@@ -15,7 +15,7 @@ const Copyright = (props) => {
     return (
         <Typography variant="body2" color="text.secondary" align="center" {...props}>
             {'Copyright © '}
-            <Link color="inherit" href="https://lucas-da-silva-portafolio.onrender.com/">
+            <Link color="inherit" target="_blank" href="https://lucas-da-silva-portafolio.onrender.com/">
                 My Website
             </Link>{' '}
             {new Date().getFullYear()}
@@ -42,6 +42,7 @@ const  Acces = ()=> {
                 password: data.get('password')
             })
 
+            localStorage.setItem('messasegin-user-token', dataLogin.authenticate.value);
             dispatch({ type: "setUser", user: dataLogin.authenticate });
         }catch(error){
             console.log(error.graphQLErrors[0].message);

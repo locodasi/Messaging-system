@@ -4,18 +4,33 @@ import Acces from "./components/Acces";
 import SignUp from "./components/Acces/SignUp";
 import FormContact from "./components/Aplication/FormContact";
 
-import { useStateContextState } from "./contexts/StateProvider";
+import { useContextState } from "./contexts/StateProvider"; 
 
 import { Routes, Route } from "react-router-dom";
 
+import { useEffect } from "react";
+
+import { ME } from './graphql/queries';
+import { useQuery } from '@apollo/client';
 
 const App = () => {
 
-  const state = useStateContextState();
+  const [state, dispatch] = useContextState();
+  const {data, loading} = useQuery(ME, {
+    fetchPolicy: "cache-and-network"
+  })
+
+  useEffect(() => {
+    if (!loading && data && data.me !== null) {
+      dispatch({ type: 'setUser', user: data.me });
+    }
+  }, [data, loading, dispatch]);
+  
 {/* <>
         <Notify errorMessage={errorMessage} />
         <Acces setToken={setToken} setError={notify} />
       </> */}
+
 
   return (
     <Routes>

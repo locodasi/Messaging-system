@@ -49,7 +49,7 @@ const resolvers = {
 
                 //Paso 4: Guardar
                 const contactSave = await newContact.save();
-
+                await User.findByIdAndUpdate(currentUser._id,{ contacts: [...currentUser.contacts, contactSave._id] });
                 //No voy a poder acceder a user de contact ni al unreadMessageCount porque el segundo no se lo estoy pasando y al primero porque no hago el populate( no lo hago porque, mongoose agrega info extra al hacer populate que hace que todo falle en el resolver de user de Contact, pero si lo arreglo ahi el mismo resolver falla para el getContacts (Porque por algun motivo ahi no agrega la info extra), asi que no hago el populate y listo), igual la idea es que en el front se vuelva a hacer la query de getContacts al agregar un contacto, asi que no deberia ser ningun problema esto
                 return contactSave;
             }

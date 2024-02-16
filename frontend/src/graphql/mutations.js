@@ -7,6 +7,7 @@ export const LOGIN = gql`
             value
             imageURL
             number
+            id
         }
     }
 `;
@@ -28,3 +29,20 @@ mutation addContact($name: String!, $number: String!) {
     }
 }
 `;
+
+export const CREATE_MESSAGE = gql`
+mutation addMessage($text: String!, $toId: String!) {
+    createMessage(text: $text, toID: $toId) {
+        date
+        id
+        read
+        text
+        from {
+            id
+        }
+        to {
+            id
+        }
+    }
+}
+`

@@ -20,7 +20,7 @@ function Copyright(props) {
   return (
     <Typography variant="body2" color="text.secondary" align="center" {...props}>
       {'Copyright © '}
-      <Link color="inherit" href="https://mui.com/">
+      <Link color="inherit" target="_blank" href="https://lucas-da-silva-portafolio.onrender.com/">
         Your Website
       </Link>{' '}
       {new Date().getFullYear()}
@@ -58,6 +58,7 @@ const SignUp = () => {
             password: data.get('password')
         })
 
+        localStorage.setItem('messasegin-user-token', dataLogin.authenticate.value);
         dispatch({ type: "setUser", user: dataLogin.authenticate });
         navigate("/");
     }catch(error){

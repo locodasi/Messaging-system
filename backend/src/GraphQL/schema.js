@@ -16,6 +16,8 @@ const messageMutation = require("./mutations/message");
 const userMutation = require("./mutations/user");
 const contactMutation = require("./mutations/contact");
 
+const messageSubscription = require("./subscriptions/messages");
+
 const rootTypeDefs = gql`
     type Query {
         root: String
@@ -24,10 +26,15 @@ const rootTypeDefs = gql`
     type Mutation {
         root: String
     }
+
+    type Subscription {
+        root: String
+    }
 `;
 
 const typeDefs = [
     rootTypeDefs,
+    messageSubscription.typeDefs,
     Contact.typeDefs,
     UserContact.typeDefs,
     User.typeDefs,
@@ -45,6 +52,7 @@ const typeDefs = [
 const resolvers = merge(
     Contact.resolvers,
     // User.resolvers,
+    messageSubscription.resolvers,
     userQuery.resolvers,
     contactQuery.resolvers,
     messageQuery.resolvers,

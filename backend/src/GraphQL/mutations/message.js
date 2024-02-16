@@ -4,6 +4,8 @@ const { GraphQLError } = require("graphql");
 
 const Message = require("../../models/Message");
 
+const pubsub = require("../pubsub");
+
 const typeDefs = gql`
 
     extend type Mutation {
@@ -31,6 +33,8 @@ const resolvers = {
             });
 
             const messageSaved = await message.save().then(savedMessage => savedMessage.populate("from to"));
+
+            pubsub.publish(`MESSAGE_SENT_${args.toID}`, { messageSent: messageSaved });
             return messageSaved;
         },
     },

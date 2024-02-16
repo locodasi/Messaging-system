@@ -3,10 +3,13 @@ import {
     Typography,
     Paper,
 } from "@mui/material";
-
+import { useStateContextState } from "../../../contexts/StateProvider";
 
 const Message = ({ message }) => {
-    const isUser = message.from.id === "65b3fe98c3c220c19e14ec8e";
+
+    const state = useStateContextState();
+
+    const isUser = message.from.id === state.user.id;
 
     const classes = {
         messageLine: {

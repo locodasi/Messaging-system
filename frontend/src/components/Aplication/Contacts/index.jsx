@@ -50,6 +50,7 @@ const Contacts = () => {
     }
 
     const logOut = () => {
+        localStorage.removeItem('messasegin-user-token');
         dispatch({ type: "cleanUser" });
         navigate("/");
     }

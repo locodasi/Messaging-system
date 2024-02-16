@@ -35,7 +35,23 @@ const start = async() => {
     const schema = makeExecutableSchema({ typeDefs,resolvers });
 
     const subscriptionServer = SubscriptionServer.create(
-        { schema, execute, subscribe },
+        { schema, execute, subscribe,
+            onConnect: async (connectionParams) => {
+                if (connectionParams.Authorization) {
+                    const token = connectionParams.Authorization.replace("Bearer ", "");
+                    try {
+                        const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
+                        const currentUser = await User.findById(decodedToken.id).populate(
+                            "contacts"
+                        );
+                        return { currentUser };
+                    } catch (error) {
+                        return null;
+                    }
+                }
+                return null;
+            }
+        },
         { server: httpServer, path : "/graphql" }
     );
 
@@ -65,7 +81,7 @@ const start = async() => {
                     return null;
                 }
             }
-        },
+        }
     });
 
     await server.start();

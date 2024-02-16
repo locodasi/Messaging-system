@@ -8,6 +8,7 @@ const  Aplication = ()=> {
 
     const state = useStateContextState();
 
+
     return(
         <div style={{display: "flex"}}>
             <Contacts />
