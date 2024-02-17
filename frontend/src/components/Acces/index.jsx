@@ -44,6 +44,7 @@ const  Acces = ()=> {
 
             localStorage.setItem('messasegin-user-token', dataLogin.authenticate.value);
             dispatch({ type: "setUser", user: dataLogin.authenticate });
+            window.location.reload();
         }catch(error){
             console.log(error.graphQLErrors[0].message);
         }

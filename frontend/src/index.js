@@ -29,7 +29,13 @@ const httpLink = new HttpLink({
 const wsLink = new WebSocketLink({
   uri: `ws://localhost:4000/graphql`,
   options: {
-    reconnect: true
+    reconnect: true,
+    connectionParams: async () => {
+      const token = localStorage.getItem('messasegin-user-token');
+      return {
+          Authorization: token ? `Bearer ${token}` : null,
+      };
+    }
   }
 })
 

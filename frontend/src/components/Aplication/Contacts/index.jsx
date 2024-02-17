@@ -5,6 +5,8 @@ import ListItemAvatar from '@mui/material/ListItemAvatar';
 import Avatar from '@mui/material/Avatar';
 import { Button } from '@mui/material';
 
+import { useApolloClient } from '@apollo/client';
+
 import useContacts from "../../../hooks/useContacts";
 
 import Contact from './Contact';
@@ -38,6 +40,8 @@ const Contacts = () => {
 
     const navigate = useNavigate();
 
+    const client = useApolloClient()
+
     if(loading){
         return(<></>)
     }
@@ -52,6 +56,7 @@ const Contacts = () => {
     const logOut = () => {
         localStorage.removeItem('messasegin-user-token');
         dispatch({ type: "cleanUser" });
+        client.resetStore()
         navigate("/");
     }
 

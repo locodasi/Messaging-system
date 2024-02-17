@@ -5,12 +5,14 @@ const { GraphQLError } = require("graphql");
 const Contact = require("../../models/Contact");
 //const Message = require("../../models/Message");
 
+const { ObjectId } = require("mongoose").Types;
+
 const typeDefs = gql`
     extend type Query {
         """
         Returns paginated contacts.
         """
-        getContacts: [Contact!]!
+        getContacts (userContact: String): [Contact!]!
     }
 `;
 
@@ -27,10 +29,16 @@ const resolvers = {
 
             const currentUserID = currentUser._id;
 
+            let filter = { user: currentUserID };
+
+            if(args.userContact) {
+                filter = { ...filter, userContact: new ObjectId(args.userContact) };
+            }
+
             //aggregate permite transformar datos, agrupar, filtrar (manipulacion avanzada de datos), esto lo logra con pipeline(tuberias), una serie de etapas que realizan una operacion especifica de forma secunecial
             const contacts = await Contact.aggregate([
                 //Filtra los contactos segun usario actual
-                { $match: { user: currentUserID } },
+                { $match: filter },
                 {
                     //loohup, hace una operacion de union entre 2 colecciones (join)
                     $lookup: {

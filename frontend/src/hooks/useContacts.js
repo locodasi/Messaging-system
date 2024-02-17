@@ -1,11 +1,12 @@
 import { GET_CONTACTS } from '../graphql/queries';
 import { useQuery } from '@apollo/client';
 
-const useContacts = () => {
+const useContacts = (variables) => {
 
     //const {data, loading, fetchMore} = useQuery(GET_CONTACTS, {
     const {data, loading, error} = useQuery(GET_CONTACTS, {
-        fetchPolicy: "cache-and-network"
+        fetchPolicy: "cache-and-network",
+        variables
     })
 
 //   const handleFetchMore = () => {
