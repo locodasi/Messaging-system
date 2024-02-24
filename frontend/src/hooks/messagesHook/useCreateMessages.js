@@ -1,7 +1,7 @@
 import { useMutation } from "@apollo/client";
 
-import { CREATE_MESSAGE } from "../graphql/mutations";
-import { GET_MESSAGES } from "../graphql/queries";
+import { CREATE_MESSAGE } from "../../graphql/mutations";
+import { GET_MESSAGES } from "../../graphql/queries";
 
 const useCreateMessage = (toId) => {
     const [mutate, result] = useMutation(CREATE_MESSAGE, {

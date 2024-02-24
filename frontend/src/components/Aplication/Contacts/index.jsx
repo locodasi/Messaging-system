@@ -7,7 +7,7 @@ import { Button } from '@mui/material';
 
 import { useApolloClient } from '@apollo/client';
 
-import useContacts from "../../../hooks/useContacts";
+import useContacts from "../../../hooks/contactsHook/useContacts";
 
 import Contact from './Contact';
 

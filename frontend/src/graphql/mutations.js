@@ -46,3 +46,9 @@ mutation addMessage($text: String!, $toId: String!) {
     }
 }
 `
+
+export const READ_MESSAGES = gql`
+mutation readMessages($messagesIDs: [String!]!, $fromId: String!) {
+    readMessage(messagesIDs: $messagesIDs, fromId: $fromId)
+}
+`

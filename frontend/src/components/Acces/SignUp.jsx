@@ -9,6 +9,9 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
+import { useFormik } from 'formik';
+import * as Yup from 'yup';
+
 import useLogin from '../../hooks/useLogin';
 import useCreateUSer from '../../hooks/useCreateUser';
 
@@ -33,40 +36,62 @@ function Copyright(props) {
 
 const defaultTheme = createTheme();
 
+const validationSchema = Yup.object({
+  number: Yup.number().required('Number is required').min(10000000,"Number lenght must be 8 or more"),
+  password: Yup.string().required('Password is required').min(8,"Password lenght must be 8 or more"),
+  RepeatPassword: Yup.string()
+    .oneOf([Yup.ref('password'), null], 'Passwords must match')
+    .required('Repeat password is required'),
+});
+
+const styles = {
+  errorMessage: {
+    color:"red",
+    marginBottom: 8
+  }
+}
+
 const SignUp = () => {
 
   const [login] = useLogin();
   const [createUser] = useCreateUSer();
   const navigate = useNavigate();
   const dispatch = useDispatchState();
+  const [error, setError] = React.useState(null);
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    if(data.get("password") !== data.get("RepeatPassword")){
-      console.log("contras no ==");
-      
-    }else{
+  const formik = useFormik({
+    initialValues: {
+      number: '',
+      password: '',
+      RepeatPassword: '',
+    },
+    validationSchema: validationSchema,
+    onSubmit: async (values) => {
+      // Handle form submission here
+      //console.log(values);
       try{
         await createUser({
-          number: data.get('number'),
-          password: data.get('password')
+          number: values.number.toString(),
+          password: values.password
         })
 
         const dataLogin = await login({
-            number: data.get('number'),
-            password: data.get('password')
+            number: values.number.toString(),
+            password: values.password
         })
 
         localStorage.setItem('messasegin-user-token', dataLogin.authenticate.value);
         dispatch({ type: "setUser", user: dataLogin.authenticate });     
         navigate("/");
         window.location.reload();
-    }catch(error){
-        console.log(error.graphQLErrors[0].message);
-    }
-    }
-  };
+      }catch(error){
+        //console.log(error)
+        const especificError = error.graphQLErrors[0].message;
+        setError(especificError);
+        setTimeout(()=> setError(null),5000)
+      }
+    },
+  });
 
   return (
     <ThemeProvider theme={defaultTheme}>
@@ -83,38 +108,47 @@ const SignUp = () => {
           <Typography component="h1" variant="h5">
             Sign up
           </Typography>
-          <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
+          <Box component="form" noValidate onSubmit={formik.handleSubmit} sx={{ mt: 3 }}>
+            {error && <h4 style={styles.errorMessage}>{error}</h4>}
             <Grid container spacing={2}>
               <Grid item xs={12}>
                 <TextField
-                  required
                   fullWidth
-                  id="email"
-                  label="Number"
+                  id="number"
                   name="number"
+                  label="Number"
                   type="number"
+                  value={formik.values.number}
+                  onChange={formik.handleChange}
+                  error={(formik.touched.number && Boolean(formik.errors.number)) || 
+                          (error && error.includes("Number"))}
+                  helperText={formik.touched.number && formik.errors.number}
                 />
               </Grid>
               <Grid item xs={12}>
                 <TextField
-                  required
                   fullWidth
+                  id="password"
                   name="password"
                   label="Password"
                   type="password"
-                  id="password"
-                  autoComplete="new-password"
+                  value={formik.values.password}
+                  onChange={formik.handleChange}
+                  error={formik.touched.password && Boolean(formik.errors.password)}
+                  helperText={formik.touched.password && formik.errors.password}
                 />
               </Grid>
               <Grid item xs={12}>
                 <TextField
-                  required
                   fullWidth
+                  id="RepeatPassword"
                   name="RepeatPassword"
                   label="Repeat password"
                   type="password"
-                  id="RepeatPassword"
-                  autoComplete="RepeatPassword"
+                  value={formik.values.RepeatPassword}
+                  onChange={formik.handleChange}
+                  error={formik.touched.RepeatPassword && Boolean(formik.errors.RepeatPassword)}
+                  helperText={formik.touched.RepeatPassword && formik.errors.RepeatPassword}
                 />
               </Grid>
             </Grid>

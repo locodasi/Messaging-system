@@ -1,4 +1,4 @@
-import { GET_MESSAGES } from '../graphql/queries';
+import { GET_MESSAGES } from '../../graphql/queries';
 import { useQuery } from '@apollo/client';
 
 const useMessages = (variables) => {

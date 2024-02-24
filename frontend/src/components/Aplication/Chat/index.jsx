@@ -7,15 +7,22 @@ import {
 } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
 
-import useMessages from "../../../hooks/useMessages";
+import useMessages from "../../../hooks/messagesHook/useMessages";
+import useCreateMessage from "../../../hooks/messagesHook/useCreateMessages";
 
 import Message from "./Message";
 
-import useCreateMessage from "../../../hooks/useCreateMessages";
+import { useDispatchState } from "../../../contexts/StateProvider";
 
-import { GET_MESSAGES } from "../../../graphql/queries";
+import useReadMessage from "../../../hooks/messagesHook/useReadMessages";
 
 const classes = {
+    header: {
+        display: "flex",
+        justifyContent: "flex-end",
+        bgcolor: "grey.100",
+        fontSize: "30px"
+    },
     chat: {
         height: "100vh",
         display: "flex",
@@ -37,6 +44,9 @@ const Chat = ({contact}) => {
     const [input, setInput] = useState("");
 
     const [createMessage] = useCreateMessage(contact.user.id);
+    const [readMessages] = useReadMessage(contact.id);
+
+    const dispatch = useDispatchState();
 
     const {messages, loading, error} = useMessages({
         toId: contact.user.id
@@ -60,12 +70,37 @@ const Chat = ({contact}) => {
         setInput(event.target.value);
     };
 
+    const closeContact = () => {
+        dispatch({ type: "cleanContact" })
+    }
+
     if(loading){
         return <></>
     }
 
+    const messagesRead = async() => {
+        const messagesNotReadIDs = messages.filter(
+            (message) => !message.read && message.from.id ===contact.user.id)
+        .map((message) => message.id);
+
+        if(messagesNotReadIDs.length !== 0){
+            await readMessages({messagesIDs: messagesNotReadIDs, fromId: contact.user.id})
+        }
+    }
+    
+    messagesRead();
+
+
+
     return (
         <Box sx={classes.chat}>
+
+            <Box sx={classes.header}>    
+                <Button onClick={closeContact} sx={{ fontSize: '16px' }}>
+                    X
+                </Button>            
+            </Box>
+
             <Box sx={classes.containerMessage}>
                 {messages.map((message) => (
                     <Message key={message.id} message={message} />

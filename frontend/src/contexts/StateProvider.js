@@ -10,6 +10,12 @@ const StateRedurcer = (state, action) => {
                 contact:action.contact
             }
         }
+        case "cleanContact": {
+            return {
+                ...state,
+                contact:null
+            }
+        }
         case "setUser": {
             return {
                 ...state,

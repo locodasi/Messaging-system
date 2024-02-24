@@ -6,6 +6,7 @@ const pubsub = require("../pubsub");
 const typeDefs = gql`
     extend type Subscription {
         messageSent: Message!
+        messagesRead: [String!]!
     }
 `;
 
@@ -17,6 +18,14 @@ const resolvers = {
                     throw new Error("User not authenticated");
                 }
                 return pubsub.asyncIterator([`MESSAGE_SENT_${currentUser._id}`]);
+            }
+        },
+        messagesRead:{
+            subscribe: async (obj, args, { currentUser } ) => {
+                if (!currentUser) {
+                    throw new Error("User not authenticated");
+                }
+                return pubsub.asyncIterator([`MESSAGE_READ_${currentUser._id}`]);
             }
         }
     },

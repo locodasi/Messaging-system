@@ -34,6 +34,23 @@ const resolvers = {
                 return userSave;
             }catch(error){
                 console.log(error);
+
+                if (error.name === "ValidationError" && error.errors && error.errors.number) {
+                    // El error es de validación y está relacionado con el campo 'number'
+                    const uniqueError = error.errors.number;
+
+                    if (uniqueError.kind === "unique") {
+                        // El error es debido a que 'number' no es único
+                        throw new GraphQLError("Number must be unique", {
+                            extensions: {
+                                code: "BAD_USER_INPUT",
+                                invalidArgs: args.name,
+                                error
+                            }
+                        });
+                    }
+                }
+
                 throw new GraphQLError("Creating the user failed", {
                     extensions: {
                         code: "BAD_USER_INPUT",

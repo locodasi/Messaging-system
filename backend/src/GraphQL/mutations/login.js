@@ -26,7 +26,7 @@ const resolvers = {
             const user = await User.findOne({ number: args.number });
 
             if (!user) {
-                throw new GraphQLError("wrong number", {
+                throw new GraphQLError("Wrong number", {
                     extensions: {
                         code: "BAD_USER_INPUT"
                     }
@@ -36,7 +36,7 @@ const resolvers = {
             const match = await bcrypt.compare(args.password, user.passwordHash);
 
             if (!match) {
-                throw new GraphQLError("wrong password", {
+                throw new GraphQLError("Wrong password", {
                     extensions: {
                         code: "BAD_USER_INPUT"
                     }

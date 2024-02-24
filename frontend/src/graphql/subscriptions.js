@@ -9,3 +9,9 @@ subscription SubscriptionMessage {
 }
 ${MESSAGE_DETAILS}
 `;
+
+export const SUBSCRIPTIONS_MESSAGES_READ = gql`
+subscription SubscriptionMessagesRead {
+    messagesRead
+}
+`;

@@ -6,30 +6,57 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
-import useCreateContact from '../../hooks/useCreateContact';
+import { useState } from 'react';
+
+import { useFormik } from 'formik';
+import * as Yup from 'yup';
+
+import useCreateContact from '../../hooks/contactsHook/useCreateContact';
 import { useNavigate } from 'react-router-dom';
 
 const defaultTheme = createTheme();
 
+const validationSchema = Yup.object({
+    number: Yup.number().required('Number is required').min(10000000,"Number lenght must be 8 or more"),
+    name: Yup.string().required('Password is required').min(3,"Password lenght must be 3 or more"),
+});
+
+const styles = {
+    errorMessage: {
+        color:"red",
+        marginBottom: 8
+    }
+}
+
 const FormContact = ()=> {
     const [createContact] = useCreateContact();
+    const [error, setError] = useState(null);
 
     const navigate = useNavigate();
 
-    const handleSubmit = async (event) => {
-        event.preventDefault();
-        const data = new FormData(event.currentTarget);
-        try{
-            await createContact({
-                number: data.get('number'),
-                name: data.get('name')
-            })
+    const formik = useFormik({
+        initialValues: {
+            number: '',
+            name: '',
+        },
+        validationSchema: validationSchema,
+        onSubmit: async (values) => {
+          // Handle form submission here
+            try{
+                await createContact({
+                    number: values.number.toString(),
+                    name: values.name
+                })
 
-            navigate("/");
-        }catch(error){
-            console.log(error.graphQLErrors[0].message);
+                navigate("/");
+            }catch(error){
+                const especificError = error.graphQLErrors[0].message;
+                setError(especificError);
+                setTimeout(()=> setError(null),5000)
+            }
+            
         }
-    };
+    });
     
     return (
         <ThemeProvider theme={defaultTheme}>
@@ -46,7 +73,8 @@ const FormContact = ()=> {
                     <Typography component="h1" variant="h5">
                         Create Contact
                     </Typography>
-                    <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+                    <Box component="form" onSubmit={formik.handleSubmit} noValidate sx={{ mt: 1 }}>
+                        {error && <h4 style={styles.errorMessage}>{error}</h4>}
                         <TextField
                             margin="normal"
                             required
@@ -56,6 +84,11 @@ const FormContact = ()=> {
                             name="number"
                             autoFocus
                             type="number"
+                            value={formik.values.number}
+                            onChange={formik.handleChange}
+                            error={(formik.touched.number && Boolean(formik.errors.number)) || 
+                                    error}
+                            helperText={formik.touched.number && formik.errors.number}
                         />
                         <TextField
                             margin="normal"
@@ -64,6 +97,11 @@ const FormContact = ()=> {
                             name="name"
                             label="Name"
                             id="name"
+                            value={formik.values.name}
+                            onChange={formik.handleChange}
+                            error={(formik.touched.name && Boolean(formik.errors.name)) || 
+                                    (error && error.includes("name"))}
+                            helperText={formik.touched.name && formik.errors.name}
                         />
                         <Button
                             type="submit"

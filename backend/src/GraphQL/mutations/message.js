@@ -10,6 +10,7 @@ const typeDefs = gql`
 
     extend type Mutation {
         createMessage(text: String! toID: String!): Message!
+        readMessage(messagesIDs: [String!]! fromId: String!):[String]
     }
 `;
 
@@ -37,6 +38,27 @@ const resolvers = {
             pubsub.publish(`MESSAGE_SENT_${args.toID}`, { messageSent: messageSaved });
             return messageSaved;
         },
+        readMessage : async(obj, args, { currentUser }) => {
+            if (!currentUser) {
+                throw new GraphQLError("Not authenticated", {
+                    extensions: {
+                        code: "BAD_USER_INPUT"
+                    }
+                });
+            }
+
+            await Message.updateMany({
+                _id: { $in: args.messagesIDs }
+            },
+            {
+                $set: {
+                    read: true
+                }
+            });
+
+            pubsub.publish(`MESSAGE_READ_${args.fromId}`, { messagesRead: args.messagesIDs });
+            return args.messagesIDs;
+        }
     },
 };
 

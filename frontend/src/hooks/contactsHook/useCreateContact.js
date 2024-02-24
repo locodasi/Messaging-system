@@ -1,6 +1,6 @@
 import { useMutation } from "@apollo/client";
 
-import { CREATE_CONTACT } from "../graphql/mutations";
+import { CREATE_CONTACT } from "../../graphql/mutations";
 
 const useCreateContact = () => {
     const [mutate, result] = useMutation(CREATE_CONTACT);
