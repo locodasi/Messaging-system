@@ -14,6 +14,10 @@ const schema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "User"
     },
+    saved: {
+        type: Boolean,
+        required: true
+    }
 });
 
 module.exports = mongoose.model("Contact", schema);

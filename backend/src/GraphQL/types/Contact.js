@@ -6,6 +6,7 @@ const typeDefs = gql`
         name: String!
         user: UserContact!
         unreadMessageCount: Int!
+        saved: Boolean!
     }
 `;
 

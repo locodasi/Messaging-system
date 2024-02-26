@@ -4,43 +4,43 @@ import { useQuery } from '@apollo/client';
 const useMessages = (variables) => {
 
     //const {data, loading, fetchMore} = useQuery(GET_CONTACTS, {
-    const {data, loading, error} = useQuery(GET_MESSAGES, {
+    const {data, loading, error, fetchMore} = useQuery(GET_MESSAGES, {
         fetchPolicy: "cache-and-network",
         variables
     })
 
-//   const handleFetchMore = () => {
-//     const canFetchMore =
-//       !loading && data && data.repositories.pageInfo.hasNextPage;
+    const handleFetchMore = () => {
+        const canFetchMore =
+        !loading && data && data.getMessages.pageInfo.hasNextPage;
 
-//     if (!canFetchMore) {
-//       return;
-//     }
+        if (!canFetchMore) {
+            return;
+        }
 
-//     fetchMore({
-//       query: GET_REPOSITORIES,
-//       variables: {
-//         after: data.repositories.pageInfo.endCursor,
-//         ...variables,
-//       },
-//       updateQuery: (previousResult, { fetchMoreResult }) => {
-//         const nextResult = {
-//           repositories: {
-//             ...fetchMoreResult.repositories,
-//             edges: [
-//               ...previousResult.repositories.edges,
-//               ...fetchMoreResult.repositories.edges,
-//             ],
-//           },
-//         };
+        fetchMore({
+            query: GET_MESSAGES,
+            variables: {
+                after: data.getMessages.pageInfo.endCursor,
+                ...variables,
+            },
+            updateQuery: (previousResult, { fetchMoreResult }) => {
+                const nextResult = {
+                    getMessages: {
+                        ...fetchMoreResult.getMessages,
+                    edges: [
+                        ...fetchMoreResult.getMessages.edges,
+                        ...previousResult.getMessages.edges,
+                    ],
+                },
+                };
 
-//         return nextResult;
-//       },
-//     });
-//   };
+                return nextResult;
+            },
+        });
+    };
 
-    let messages = (loading || error) ? [] : data.getMessages
-    return {messages, loading, error}
+    let messages = (loading || error) ? [] : data.getMessages.edges.map(edge => edge.node);
+    return {messages, loading, error, fetchMore: handleFetchMore}
     //    return {contacts, loading, fetchMore: handleFetchMore,}
 
 };

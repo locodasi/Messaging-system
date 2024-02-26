@@ -5,6 +5,9 @@ import ListItemAvatar from '@mui/material/ListItemAvatar';
 import Avatar from '@mui/material/Avatar';
 import { Button } from '@mui/material';
 
+import PerfectScrollbar from 'react-perfect-scrollbar';
+import 'react-perfect-scrollbar/dist/css/styles.css';
+
 import { useApolloClient } from '@apollo/client';
 
 import useContacts from "../../../hooks/contactsHook/useContacts";
@@ -95,12 +98,19 @@ const Contacts = () => {
                     Cerrar Sesión
                 </Button>
             </div>
-            {contacts.map(item => (
-                <div key={item.id}>
-                    <Contact contact={item} />
-                    <Divider variant="inset" component="li" />
-                </div>
-            ))}
+
+            <PerfectScrollbar style={{ maxHeight: 'calc(100vh - 100px)', overflowY: 'auto'}}>
+                <List style={classes.root}>
+                    {/* Tu código de encabezado */}
+                    {contacts.map((item) => (
+                    <div key={item.id}>
+                        <Contact contact={item} />
+                        <Divider variant="inset" component="li" />
+                    </div>
+                    ))}
+                </List>
+            </PerfectScrollbar>
+
         </List>
     );
 }

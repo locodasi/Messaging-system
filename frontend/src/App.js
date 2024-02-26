@@ -12,6 +12,7 @@ import { useEffect } from "react";
 
 import { ME } from './graphql/queries';
 import { useQuery } from '@apollo/client';
+import UpdateContactForm from "./components/Aplication/UpdateContactForm";
 
 const App = () => {
 
@@ -37,6 +38,7 @@ const App = () => {
       <Route path="/" element = { state.user ? <Aplication /> : <Acces />} />
       <Route path="/signup" element={<SignUp />}/>
       <Route path="/createContact" element={<FormContact />}/>
+      <Route path="/updateContact" element={<UpdateContactForm />}/>
     </Routes>
   );
 }

@@ -6,8 +6,18 @@ import { GET_MESSAGES } from "../../graphql/queries";
 const useCreateMessage = (toId) => {
     const [mutate, result] = useMutation(CREATE_MESSAGE, {
         update: (cache, { data: { createMessage } }) => {
-            cache.updateQuery({ query: GET_MESSAGES, variables: {toId}}, ({getMessages})=> {
-                return {getMessages: getMessages.concat(createMessage)}
+            cache.updateQuery({ query: GET_MESSAGES, variables: {toId, first:10}}, ({getMessages})=> {
+                const newGetMessages = {
+                    ...getMessages,
+                    edges:[
+                        ...getMessages.edges,
+                        {
+                            cursor: createMessage.id,
+                            node: createMessage
+                        }
+                    ]
+                }
+                return {getMessages:newGetMessages}
             })
         },
         onError: (error) => {

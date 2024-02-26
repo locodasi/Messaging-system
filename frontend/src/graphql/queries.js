@@ -1,25 +1,30 @@
 import { gql } from "@apollo/client";
-import { MESSAGE_DETAILS } from "./fragments";
+import { MESSAGE_DETAILS, CONTACT_DETAILS } from "./fragments";
 
 export const GET_CONTACTS = gql`
 query GetContacts ($userContact: String) {
     getContacts (userContact: $userContact) {
-        name
-        user {
-            number
-            id
-            imageURL
-        }
+        ...ContactDetails
         unreadMessageCount
-        id
     }
 }
+${CONTACT_DETAILS}
 `;
 
+
 export const GET_MESSAGES = gql`
-query GetMessages($toId: String!) {
-    getMessages(toID: $toId) {
-        ...MessageDetails
+query GetMessages($toId: String!, $first: Int, $after: String) {
+    getMessages(toID: $toId, first: $first, after: $after) {
+        pageInfo {
+            endCursor
+            hasNextPage
+        }
+        edges {
+            cursor
+            node {
+                ...MessageDetails
+            }
+        }
     }
 }
 ${MESSAGE_DETAILS}

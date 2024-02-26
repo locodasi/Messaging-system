@@ -40,7 +40,7 @@ const resolvers = {
                 //Filtra los contactos segun usario actual
                 { $match: filter },
                 {
-                    //loohup, hace una operacion de union entre 2 colecciones (join)
+                    //lookup, hace una operacion de union entre 2 colecciones (join)
                     $lookup: {
                         //Con quien hago el join
                         from: "messages",
@@ -87,6 +87,7 @@ const resolvers = {
                         id: "$_id",
                         //El name, 1 indica que se incluye
                         name: 1,
+                        saved: 1,
                         //Obtengo al usuario que obtuve en el segundo lookup
                         userContact: {
                             //arrayElemntAt es para obtener un elemento de un array, aca estaria obteniendo el primer elemento de userContactData, osea lo que obtuve en el segundo lookup, aunque el lookup retorne un solo elemento igual lo vuelve un array, por eso saco el primero, porque ademas es el unico

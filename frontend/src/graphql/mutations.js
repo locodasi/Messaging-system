@@ -1,5 +1,5 @@
 import { gql } from "@apollo/client";
-//import { REPOSITORY_BASE_FIELDS, REVIEW_BASE_FIELDS } from "./fragments";
+import { CONTACT_DETAILS, MESSAGE_DETAILS } from "./fragments";
 
 export const LOGIN = gql`
     mutation login($number: String!, $password: String!) {
@@ -25,26 +25,28 @@ mutation addUser($number: String!, $password: String!) {
 export const CREATE_CONTACT = gql`
 mutation addContact($name: String!, $number: String!) {
     createContact(name: $name, number: $number) {
-        name
+        ...ContactDetails
     }
 }
+${CONTACT_DETAILS}
 `;
+
+export const UPDATE_CONTACT = gql`
+mutation updateContact($name: String!, $number: String!) {
+    updateContact(name: $name, number: $number) {
+        ...ContactDetails
+    }
+}
+${CONTACT_DETAILS}
+`
 
 export const CREATE_MESSAGE = gql`
 mutation addMessage($text: String!, $toId: String!) {
     createMessage(text: $text, toID: $toId) {
-        date
-        id
-        read
-        text
-        from {
-            id
-        }
-        to {
-            id
-        }
+        ...MessageDetails
     }
 }
+${MESSAGE_DETAILS}
 `
 
 export const READ_MESSAGES = gql`

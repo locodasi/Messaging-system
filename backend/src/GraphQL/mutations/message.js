@@ -3,6 +3,7 @@ const { gql } = require("apollo-server");
 const { GraphQLError } = require("graphql");
 
 const Message = require("../../models/Message");
+const Contact = require("../../models/Contact");
 
 const pubsub = require("../pubsub");
 
@@ -34,6 +35,23 @@ const resolvers = {
             });
 
             const messageSaved = await message.save().then(savedMessage => savedMessage.populate("from to"));
+
+            const otherIdHasMeContact = await Contact.findOne({
+                user: args.toID,
+                userContact: currentUser._id
+            });
+
+            if(!otherIdHasMeContact){
+
+                const newContact = new Contact({
+                    name: currentUser.number,
+                    user: args.toID,
+                    userContact: currentUser._id,
+                    saved: false
+                });
+
+                newContact.save();
+            }
 
             pubsub.publish(`MESSAGE_SENT_${args.toID}`, { messageSent: messageSaved });
             return messageSaved;

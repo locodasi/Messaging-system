@@ -4,17 +4,19 @@ import {
     TextField,
     Button,
     Grid,
+    Typography
 } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
+
+import { useNavigate } from "react-router-dom";
 
 import useMessages from "../../../hooks/messagesHook/useMessages";
 import useCreateMessage from "../../../hooks/messagesHook/useCreateMessages";
 
-import Message from "./Message";
-
 import { useDispatchState } from "../../../contexts/StateProvider";
 
 import useReadMessage from "../../../hooks/messagesHook/useReadMessages";
+import Messages from "./Messages";
 
 const classes = {
     header: {
@@ -29,11 +31,6 @@ const classes = {
         flexDirection: "column",
         bgcolor: "grey.200",
     },
-    containerMessage: { 
-        flexGrow: 1, 
-        overflow: "auto", 
-        p: 2 
-    },
     conatinerSend: { 
         p: 2, 
         backgroundColor: "background.default" 
@@ -46,10 +43,13 @@ const Chat = ({contact}) => {
     const [createMessage] = useCreateMessage(contact.user.id);
     const [readMessages] = useReadMessage(contact.id);
 
+    const navigate = useNavigate();
+
     const dispatch = useDispatchState();
 
-    const {messages, loading, error} = useMessages({
-        toId: contact.user.id
+    const {messages, loading, error, fetchMore} = useMessages({
+        toId: contact.user.id,
+        first: 10
     });
 
     if(error && error.graphQLErrors[0].message === "Not authenticated"){
@@ -74,6 +74,11 @@ const Chat = ({contact}) => {
         dispatch({ type: "cleanContact" })
     }
 
+    const updateContact = () => {
+        localStorage.setItem("contactNumber", contact.user.number);
+        navigate("/updateContact");
+    }
+
     if(loading){
         return <></>
     }
@@ -90,22 +95,22 @@ const Chat = ({contact}) => {
     
     messagesRead();
 
-
-
     return (
         <Box sx={classes.chat}>
 
-            <Box sx={classes.header}>    
+            <Box sx={classes.header}>   
+                <Typography style={{marginTop: "8px"}}>{contact.name}</Typography>  
+                { !contact.saved &&
+                    <Button onClick={updateContact} sx={{ fontSize: '16px' }}>
+                        Agregar contacto
+                    </Button> 
+                }  
                 <Button onClick={closeContact} sx={{ fontSize: '16px' }}>
                     X
-                </Button>            
+                </Button>  
             </Box>
 
-            <Box sx={classes.containerMessage}>
-                {messages.map((message) => (
-                    <Message key={message.id} message={message} />
-                ))}
-            </Box>
+            <Messages messages={messages} fetchMore={fetchMore}/>
 
             <Box sx={classes.conatinerSend}>
                 <Grid container spacing={2}>

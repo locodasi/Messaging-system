@@ -6,9 +6,9 @@ const Contact = require("../../models/Contact");
 const User = require("../../models/User");
 
 const typeDefs = gql`
-
     extend type Mutation {
         createContact(name: String! number: String!): Contact!
+        updateContact(name: String! number: String!): Contact!
     }
 `;
 
@@ -45,6 +45,7 @@ const resolvers = {
                     name: args.name,
                     user: currentUser._id,
                     userContact: user._id,
+                    saved: true
                 });
 
                 //Paso 4: Guardar
@@ -54,7 +55,41 @@ const resolvers = {
                 return contactSave;
             }
         },
-    },
+        updateContact: async (obj, args, { currentUser }) => {
+            if (!currentUser) {
+                throw new GraphQLError("Not authenticated", {
+                    extensions: {
+                        code: "BAD_USER_INPUT"
+                    }
+                });
+            }
+
+            // Paso 1: Buscar el usuario con el número especificado
+            const user = await User.findOne({ number: args.number });
+
+            if (!user) {
+                // El usuario no existe, manejar según tus necesidades
+                throw new Error("User not exist");
+            } else {
+
+                const contactUpdate = await Contact.findOneAndUpdate({
+                    user: currentUser._id,
+                    userContact: user._id
+                },{
+                    name: args.name,
+                    saved: true
+                },{ new: true, runValidators: true }).populate("user userContact");
+
+                console.log(contactUpdate);
+                if(!contactUpdate){
+                    throw new Error("The contact not exist");
+                }
+
+                return contactUpdate;
+
+            }
+        },
+    }
 };
 
 module.exports = {

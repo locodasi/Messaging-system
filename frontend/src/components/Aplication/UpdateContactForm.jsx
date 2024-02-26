@@ -11,13 +11,12 @@ import { useState } from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 
-import useCreateContact from '../../hooks/contactsHook/useCreateContact';
 import { useNavigate } from 'react-router-dom';
+import useUpdateContact from '../../hooks/contactsHook/useUpdateContact';
 
 const defaultTheme = createTheme();
 
 const validationSchema = Yup.object({
-    number: Yup.number().required('Number is required').min(10000000,"Number lenght must be 8 or more"),
     name: Yup.string().required('Name is required').min(3,"Name lenght must be 3 or more"),
 });
 
@@ -28,23 +27,23 @@ const styles = {
     }
 }
 
-const FormContact = ()=> {
-    const [createContact] = useCreateContact();
+const UpdateContactForm = ()=> {
+    const number = localStorage.getItem("contactNumber");
+    const [updateContact] = useUpdateContact(number);
     const [error, setError] = useState(null);
 
     const navigate = useNavigate();
 
     const formik = useFormik({
         initialValues: {
-            number: '',
             name: '',
         },
         validationSchema: validationSchema,
         onSubmit: async (values) => {
           // Handle form submission here
             try{
-                await createContact({
-                    number: values.number.toString(),
+                await updateContact({
+                    number: number,
                     name: values.name
                 })
 
@@ -79,21 +78,6 @@ const FormContact = ()=> {
                             margin="normal"
                             required
                             fullWidth
-                            id="number"
-                            label="Number"
-                            name="number"
-                            autoFocus
-                            type="number"
-                            value={formik.values.number}
-                            onChange={formik.handleChange}
-                            error={(formik.touched.number && Boolean(formik.errors.number)) || 
-                                    error}
-                            helperText={formik.touched.number && formik.errors.number}
-                        />
-                        <TextField
-                            margin="normal"
-                            required
-                            fullWidth
                             name="name"
                             label="Name"
                             id="name"
@@ -118,4 +102,4 @@ const FormContact = ()=> {
     );
 }
 
-export default FormContact;
+export default UpdateContactForm;
