@@ -70,7 +70,7 @@ const UpdateContactForm = ()=> {
                 }}
                 >
                     <Typography component="h1" variant="h5">
-                        Create Contact
+                        Update Contact
                     </Typography>
                     <Box component="form" onSubmit={formik.handleSubmit} noValidate sx={{ mt: 1 }}>
                         {error && <h4 style={styles.errorMessage}>{error}</h4>}

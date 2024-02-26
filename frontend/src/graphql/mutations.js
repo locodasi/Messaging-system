@@ -25,10 +25,9 @@ mutation addUser($number: String!, $password: String!) {
 export const CREATE_CONTACT = gql`
 mutation addContact($name: String!, $number: String!) {
     createContact(name: $name, number: $number) {
-        ...ContactDetails
+        name
     }
 }
-${CONTACT_DETAILS}
 `;
 
 export const UPDATE_CONTACT = gql`
@@ -37,7 +36,7 @@ mutation updateContact($name: String!, $number: String!) {
         ...ContactDetails
     }
 }
-${CONTACT_DETAILS}
+${CONTACT_DETAILS} 
 `
 
 export const CREATE_MESSAGE = gql`
